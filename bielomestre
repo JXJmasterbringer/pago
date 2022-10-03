@@ -1,7 +1,7 @@
 
 local message = Instance.new("Message",workspace)
 message.Text = "Wellcome to main scripts thank you for buying it if u just cracked it go fuck yourself :3"
-wait(4)
+wait(8)
 message:Destroy()
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
