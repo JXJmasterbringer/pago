@@ -11,7 +11,7 @@ local webhookcheck =
 local url =
    "https://discord.com/api/webhooks/1072919620182343773/TcxkAH0g86i_f5geZZJxtwWfD8RsJVAkICHhFwE8mmAFHZJzDuqWEhDObhj6llRPQC7S"
 local data = {
-   ["content"] = "@everyone Some idiot executed ur script",
+   ["content"] = "Some idiot executed ur script",
    ["embeds"] = {
        {
            ["title"] = "**Paid version**",
