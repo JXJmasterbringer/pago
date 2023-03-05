@@ -688,8 +688,22 @@ MainScript.MouseButton1Down:connect(function()
         --CrashServer
         CrashServer.MouseButton1Down:connect(function()
             game:GetService"RunService".RenderStepped:Connect(function()
+            	local Char = game.Players.localPlayer.Character
+	local hum = Char.Humanoid
+	local Timer = 50
+	local Crash = 0
+	local cam = workspace.CurrentCamera
                 game:GetService("ReplicatedStorage").RemoteEvent.SpawnCharacterEvent:FireServer("RandomSpawn")
-                game.Players.LocalPlayer.Character:MoveTo(Vector3.new(565365.7869868369, 52585745.86554325785657, -1725957454.158203125))
+
+	game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
+
+	cam.CameraType = Enum.CameraType.Fixed
+	cam.Focus = CFrame.new(Vector3.new(0, -9e6, 0))
+
+	Char.HumanoidRootPart.CFrame = CFrame.new(-9e6,9e6,-9e6)
+	wait(0.2)
+	Char.Torso.Anchored = true
+	game.CoreGui.RobloxGui:Remove()
                 game.Players.LocalPlayer.PlayerGui.ScreenGui:Destroy()
                 end)
         end)
