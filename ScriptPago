@@ -111,6 +111,8 @@ MainScript.Text = "Main Script"
 MainScript.TextColor3 = Color3.fromRGB(0, 0, 0)
 MainScript.TextSize = 14.000
 MainScript.MouseButton1Down:connect(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/JXJmasterbringer/page3/main/Misc",true))()
+wait()
 	game.StarterGui:SetCore("SendNotification", {
         Title = "wellcome my nigga <3";
         Text = "Whitelisted enjoy <3";
