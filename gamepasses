@@ -1,5 +1,5 @@
 game.StarterGui:SetCore("SendNotification", {
-        Title = "Sorry Cloud is currently down";
+        Title = "Sorry, Cloud is currently down";
         Text = "Try Again Latter";
         Duration = 7;
         })
