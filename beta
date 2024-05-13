@@ -307,7 +307,7 @@ alphatest.BorderSizePixel = 0
 alphatest.Position = UDim2.new(0.0145719489, 0, 1.99454224, 0)
 alphatest.Size = UDim2.new(0, 540, 0, 50)
 alphatest.Font = Enum.Font.SourceSans
-alphatest.Text = "alpha tester: darko"
+alphatest.Text = "alpha tester: darko,Myx and Lightning"
 alphatest.TextColor3 = Color3.fromRGB(231, 231, 231)
 alphatest.TextSize = 14.000
 
