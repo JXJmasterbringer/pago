@@ -354,7 +354,7 @@ watermark.BorderSizePixel = 0
 watermark.Position = UDim2.new(0.774634182, 0, -0.0417171121, 0)
 watermark.Size = UDim2.new(0, 327, 0, 33)
 watermark.Font = Enum.Font.SourceSans
-watermark.Text = "Tesla Gui  v2 private alpha: Beta Build"
+watermark.Text = "Tesla Gui  v2: Beta Build"
 watermark.TextColor3 = Color3.fromRGB(222, 92, 254)
 watermark.TextSize = 14.000
 
