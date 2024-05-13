@@ -1862,29 +1862,7 @@ SafeSpot.TextColor3 = Color3.fromRGB(241, 241, 241)
 SafeSpot.TextSize = 14.000
 SafeSpot.TextStrokeColor3 = Color3.fromRGB(129, 129, 129)
 SafeSpot.MouseButton1Down:connect(function()
-	local Char = game.Players.LocalPlayer.Character 
-	_G.SafeSpot = not _G.SafeSpot
-	if _G.SafeSpot then
-		SafeSpot.Text = 'UnSafeSpot'
-		table.insert(Pos, Char.Head.Position)
-	else
-		SafeSpot.Text = 'SafeSpot'
-		wait(0.5)
-		Char.HumanoidRootPart.CFrame = CFrame.new(Pos[1])
-		table.clear(Pos)
-	end
-	while game.RunService.RenderStepped:wait() do
-		if _G.SafeSpot then
-			pcall(function()
-				Char.HumanoidRootPart.CFrame = CFrame.new(-9e6,9e6,-9e6)
-				for i,v in pairs(Char:GetChildren()) do
-					v.Velocity = Vector3.new(0,0,0)
-				end
-			end)
-		else
-			break
-		end
-	end
+	    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(600000, 600001, 600000)
 end)
 
 local function LFKJCS_fake_script() -- NinjaGui.Script 
