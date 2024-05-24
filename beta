@@ -2062,7 +2062,7 @@ coroutine.wrap(LFKJCS_fake_script)()
 --coisas
 
 game.StarterGui:SetCore("ChatMakeSystemMessage", {
-    Text = "Script Cloud status(online)\nBetaVersion:\nAE%5BV2EE\n Cloud sycn done:\n script build: Beta";
+    Text = "Script Cloud status(online)\nBetaVersion:\nAE%5BV2EB\n Cloud sycn: Not Working:\n script build: v2.0";
     Color = Color3.fromRGB(138,43,226);
     Font = Enum.Font.SourceSansBold;
     FontSize = Enum.FontSize.Size96;
