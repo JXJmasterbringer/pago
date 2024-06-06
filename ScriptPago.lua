@@ -488,7 +488,7 @@ changelog.BorderSizePixel = 0
 changelog.Position = UDim2.new(0.0145719489, 0, 2.47989511, 0)
 changelog.Size = UDim2.new(0, 533, 0, 199)
 changelog.Font = Enum.Font.SourceSans
-changelog.Text = "Changelog: v2.0.0 nothing yet...."
+changelog.Text = "Changelog: v2.2.0: Added Chat Logs/Removed Lbb Gui"
 changelog.TextColor3 = Color3.fromRGB(255, 255, 255)
 changelog.TextSize = 14.000
 
@@ -2347,12 +2347,13 @@ end
 coroutine.wrap(LFKJCS_fake_script)()
 
 
---coisas
+---------------------------------------------------
 
 game.StarterGui:SetCore("ChatMakeSystemMessage", {
-    Text = "Script Build 06/04/24)\nPrivateVersion:\nAE%G42XzB\n Cloud sycn: Not Working\n script build: v2.1";
+    Text = "Script Build 06/06/24)\nPrivateVersion:\nAE%G42XzB\n Cloud sycn: Not Working\n script build: v2.2";
     Color = Color3.fromRGB(138,43,226);
     Font = Enum.Font.SourceSansBold;
     FontSize = Enum.FontSize.Size96;
 })
 wait()
+---------------------------------------------------
