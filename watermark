@@ -1,0 +1,77 @@
+local CWatermark = Instance.new("ScreenGui")
+local Background = Instance.new("Frame")
+local UIPadding = Instance.new("UIPadding")
+local UIListLayout = Instance.new("UIListLayout")
+local TopColor = Instance.new("Frame")
+local UIGradient = Instance.new("UIGradient")
+local Text = Instance.new("TextLabel")
+local UIListLayout_2 = Instance.new("UIListLayout")
+
+--Properties:
+
+CWatermark.Name = "CWatermark"
+CWatermark.Parent = game.CoreGui
+CWatermark.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+CWatermark.ResetOnSpawn = false
+
+Background.Name = "Background"
+Background.Parent = CWatermark
+Background.AnchorPoint = Vector2.new(0, 1)
+Background.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+Background.BorderColor3 = Color3.fromRGB(60, 60, 60)
+Background.BorderSizePixel = 2
+Background.Position = UDim2.new(0, 22, 0, 22)
+Background.Size = UDim2.new(0, 410, 0, 24)
+Background.Active = true
+Background.Draggable = true
+
+UIPadding.Parent = Background
+
+UIListLayout.Parent = Background
+UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+TopColor.Name = "TopColor"
+TopColor.Parent = Background
+TopColor.AnchorPoint = Vector2.new(0, 1)
+TopColor.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
+TopColor.BorderColor3 = Color3.fromRGB(60, 60, 60)
+TopColor.BorderSizePixel = 0
+TopColor.Position = UDim2.new(-0.0109756095, 0, 0.0833333358, 0)
+TopColor.Size = UDim2.new(0, 410, 0, 2)
+
+UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
+UIGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.25), NumberSequenceKeypoint.new(0.50, 0.76), NumberSequenceKeypoint.new(1.00, 0.24)}
+UIGradient.Parent = TopColor
+
+Text.Name = "Text"
+Text.Parent = TopColor
+Text.AnchorPoint = Vector2.new(0, 1)
+Text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Text.BackgroundTransparency = 1.000
+Text.Position = UDim2.new(0.0109756095, 0, 11, 0)
+Text.Size = UDim2.new(0, 405, 0, 22)
+Text.Font = Enum.Font.Code
+Text.Text = "Loading! | This may take long due to http errors"
+Text.TextColor3 = Color3.fromRGB(255, 255, 255)
+Text.TextScaled = true
+Text.TextSize = 14.000
+Text.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+Text.TextWrapped = true
+
+UIListLayout_2.Parent = TopColor
+UIListLayout_2.FillDirection = Enum.FillDirection.Horizontal
+UIListLayout_2.HorizontalAlignment = Enum.HorizontalAlignment.Center
+UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- Scripts:
+
+local function NKXPFO_fake_script() -- Text.LocalScript 
+	local script = Instance.new('LocalScript', Text)
+
+	game:GetService("RunService").RenderStepped:Connect(function(fpsmath) 
+		script.Parent.Text = ("Ilusion.xyz |LIVE Build| " ..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.. " | FPS: " .. math.floor(1/fpsmath))
+	end)
+end
+coroutine.wrap(NKXPFO_fake_script)()
