@@ -1,3 +1,4 @@
+game.Players.LocalPlayer:Kick("scripts are closed for now, they will be fully working soon")
 _G.cloud = true
 
 
