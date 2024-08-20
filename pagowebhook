@@ -1,294 +1,73 @@
---[[
- .____                  ________ ___.    _____                           __                
- |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
- |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
- |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
- |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
-         \/          \/         \/    \/                \/     \/     \/                   
-          \_Welcome to LuaObfuscator.com   (Alpha 0.2.4) ~  Much Love, Ferib 
+if (game.PlaceId == 823323202) then
 
-]]--
+local webhookcheck =
+   is_sirhurt_closure and "Sirhurt" or pebc_execute and "ProtoSmasher" or syn and "Synapse X" or
+   secure_load and "Sentinel" or
+   KRNL_LOADED and "Krnl" or
+   SONA_LOADED and "Sona" or
+   ScriptWare_LOADED and "ScriptWare" or
+   "random exploit"
 
-local StrToNumber = tonumber;
-local Byte = string.byte;
-local Char = string.char;
-local Sub = string.sub;
-local Subg = string.gsub;
-local Rep = string.rep;
-local Concat = table.concat;
-local Insert = table.insert;
-local LDExp = math.ldexp;
-local GetFEnv = getfenv or function()
-	return _ENV;
-end;
-local Setmetatable = setmetatable;
-local PCall = pcall;
-local Select = select;
-local Unpack = unpack or table.unpack;
-local ToNumber = tonumber;
-local function VMCall(ByteString, vmenv, ...)
-	local DIP = 1;
-	local repeatNext;
-	ByteString = Subg(Sub(ByteString, 5), "..", function(byte)
-		if (Byte(byte, 2) == 79) then
-			repeatNext = StrToNumber(Sub(byte, 1, 1));
-			return "";
-		else
-			local a = Char(StrToNumber(byte, 16));
-			if repeatNext then
-				local b = Rep(a, repeatNext);
-				repeatNext = nil;
-				return b;
-			else
-				return a;
-			end
-		end
-	end);
-	local function gBit(Bit, Start, End)
-		if End then
-			local Res = (Bit / (2 ^ (Start - 1))) % (2 ^ (((End - 1) - (Start - 1)) + 1));
-			return Res - (Res % 1);
-		else
-			local Plc = 2 ^ (Start - 1);
-			return (((Bit % (Plc + Plc)) >= Plc) and 1) or 0;
-		end
-	end
-	local function gBits8()
-		local a = Byte(ByteString, DIP, DIP);
-		DIP = DIP + 1;
-		return a;
-	end
-	local function gBits16()
-		local a, b = Byte(ByteString, DIP, DIP + 2);
-		DIP = DIP + 2;
-		return (b * 256) + a;
-	end
-	local function gBits32()
-		local a, b, c, d = Byte(ByteString, DIP, DIP + 3);
-		DIP = DIP + 4;
-		return (d * 16777216) + (c * 65536) + (b * 256) + a;
-	end
-	local function gFloat()
-		local Left = gBits32();
-		local Right = gBits32();
-		local IsNormal = 1;
-		local Mantissa = (gBit(Right, 1, 20) * (2 ^ 32)) + Left;
-		local Exponent = gBit(Right, 21, 31);
-		local Sign = ((gBit(Right, 32) == 1) and -1) or 1;
-		if (Exponent == 0) then
-			if (Mantissa == 0) then
-				return Sign * 0;
-			else
-				Exponent = 1;
-				IsNormal = 0;
-			end
-		elseif (Exponent == 2047) then
-			return ((Mantissa == 0) and (Sign * (1 / 0))) or (Sign * NaN);
-		end
-		return LDExp(Sign, Exponent - 1023) * (IsNormal + (Mantissa / (2 ^ 52)));
-	end
-	local function gString(Len)
-		local Str;
-		if not Len then
-			Len = gBits32();
-			if (Len == 0) then
-				return "";
-			end
-		end
-		Str = Sub(ByteString, DIP, (DIP + Len) - 1);
-		DIP = DIP + Len;
-		local FStr = {};
-		for Idx = 1, #Str do
-			FStr[Idx] = Char(Byte(Sub(Str, Idx, Idx)));
-		end
-		return Concat(FStr);
-	end
-	local gInt = gBits32;
-	local function _R(...)
-		return {...}, Select("#", ...);
-	end
-	local function Deserialize()
-		local Instrs = {};
-		local Functions = {};
-		local Lines = {};
-		local Chunk = {Instrs,Functions,nil,Lines};
-		local ConstCount = gBits32();
-		local Consts = {};
-		for Idx = 1, ConstCount do
-			local Type = gBits8();
-			local Cons;
-			if (Type == 1) then
-				Cons = gBits8() ~= 0;
-			elseif (Type == 2) then
-				Cons = gFloat();
-			elseif (Type == 3) then
-				Cons = gString();
-			end
-			Consts[Idx] = Cons;
-		end
-		Chunk[3] = gBits8();
-		for Idx = 1, gBits32() do
-			local Descriptor = gBits8();
-			if (gBit(Descriptor, 1, 1) == 0) then
-				local Type = gBit(Descriptor, 2, 3);
-				local Mask = gBit(Descriptor, 4, 6);
-				local Inst = {gBits16(),gBits16(),nil,nil};
-				if (Type == 0) then
-					Inst[3] = gBits16();
-					Inst[4] = gBits16();
-				elseif (Type == 1) then
-					Inst[3] = gBits32();
-				elseif (Type == 2) then
-					Inst[3] = gBits32() - (2 ^ 16);
-				elseif (Type == 3) then
-					Inst[3] = gBits32() - (2 ^ 16);
-					Inst[4] = gBits16();
-				end
-				if (gBit(Mask, 1, 1) == 1) then
-					Inst[2] = Consts[Inst[2]];
-				end
-				if (gBit(Mask, 2, 2) == 1) then
-					Inst[3] = Consts[Inst[3]];
-				end
-				if (gBit(Mask, 3, 3) == 1) then
-					Inst[4] = Consts[Inst[4]];
-				end
-				Instrs[Idx] = Inst;
-			end
-		end
-		for Idx = 1, gBits32() do
-			Functions[Idx - 1] = Deserialize();
-		end
-		for Idx = 1, gBits32() do
-			Lines[Idx] = gBits32();
-		end
-		return Chunk;
-	end
-	local function Wrap(Chunk, Upvalues, Env)
-		local Instr = Chunk[1];
-		local Proto = Chunk[2];
-		local Params = Chunk[3];
-		return function(...)
-			local VIP = 1;
-			local Top = -1;
-			local Args = {...};
-			local PCount = Select("#", ...) - 1;
-			local function Loop()
-				local Instr = Instr;
-				local Proto = Proto;
-				local Params = Params;
-				local _R = _R;
-				local Vararg = {};
-				local Lupvals = {};
-				local Stk = {};
-				for Idx = 0, PCount do
-					if (Idx >= Params) then
-						Vararg[Idx - Params] = Args[Idx + 1];
-					else
-						Stk[Idx] = Args[Idx + 1];
-					end
-				end
-				local Varargsz = (PCount - Params) + 1;
-				local Inst;
-				local Enum;
-				while true do
-					Inst = Instr[VIP];
-					Enum = Inst[1];
-					if (Enum <= 8) then
-						if (Enum <= 3) then
-							if (Enum <= 1) then
-								if (Enum == 0) then
-									Stk[Inst[2]][Inst[3]] = Stk[Inst[4]];
-								else
-									local A = Inst[2];
-									Stk[A] = Stk[A](Stk[A + 1]);
-								end
-							elseif (Enum == 2) then
-								if not Stk[Inst[2]] then
-									VIP = VIP + 1;
-								else
-									VIP = Inst[3];
-								end
-							else
-								Stk[Inst[2]] = {};
-							end
-						elseif (Enum <= 5) then
-							if (Enum == 4) then
-								Stk[Inst[2]] = Stk[Inst[3]][Inst[4]];
-							else
-								local A = Inst[2];
-								local T = Stk[A];
-								local B = Inst[3];
-								for Idx = 1, B do
-									T[Idx] = Stk[A + Idx];
-								end
-							end
-						elseif (Enum <= 6) then
-							Stk[Inst[2]] = Inst[3];
-						elseif (Enum == 7) then
-							local A = Inst[2];
-							local T = Stk[A];
-							for Idx = A + 1, Inst[3] do
-								Insert(T, Stk[Idx]);
-							end
-						else
-							local B = Inst[3];
-							local K = Stk[B];
-							for Idx = B + 1, Inst[4] do
-								K = K .. Stk[Idx];
-							end
-							Stk[Inst[2]] = K;
-						end
-					elseif (Enum <= 13) then
-						if (Enum <= 10) then
-							if (Enum > 9) then
-								if Stk[Inst[2]] then
-									VIP = VIP + 1;
-								else
-									VIP = Inst[3];
-								end
-							else
-								local A = Inst[2];
-								Stk[A] = Stk[A](Unpack(Stk, A + 1, Inst[3]));
-							end
-						elseif (Enum <= 11) then
-							Stk[Inst[2]][Inst[3]] = Inst[4];
-						elseif (Enum > 12) then
-							local A = Inst[2];
-							Stk[A](Stk[A + 1]);
-						else
-							do
-								return;
-							end
-						end
-					elseif (Enum <= 15) then
-						if (Enum == 14) then
-							Stk[Inst[2]] = Env[Inst[3]];
-						else
-							Env[Inst[3]] = Stk[Inst[2]];
-						end
-					elseif (Enum <= 16) then
-						Stk[Inst[2]] = Stk[Inst[3]];
-					elseif (Enum > 17) then
-						local A = Inst[2];
-						local B = Stk[Inst[3]];
-						Stk[A + 1] = B;
-						Stk[A] = B[Inst[4]];
-					else
-						VIP = Inst[3];
-					end
-					VIP = VIP + 1;
-				end
-			end
-			A, B = _R(PCall(Loop));
-			if not A[1] then
-				local line = Chunk[4][VIP] or "?";
-				error("Script error at [" .. line .. "]:" .. A[2]);
-			else
-				return Unpack(A, 2, B);
-			end
-		end;
-	end
-	return Wrap(Deserialize(), {}, vmenv)(...);
+local url =
+   "https://discord.com/api/webhooks/1074702655374504057/9Pvwl1OJ-DtfxZDyXbCDw7CsosAc_Zj-ojEbe6x-oc44XQfphA0Muh-mO4XgIJP1lKwb"
+local data = {
+   ["content"] = "Someone executed the paid script",
+   ["embeds"] = {
+       {
+           ["title"] = "**paid version**",
+           ["description"] = "Username: " .. game.Players.LocalPlayer.Name.." with **"..webhookcheck.."**",
+           ["type"] = "rich",
+           ["color"] = tonumber(0x7269da),
+           ["image"] = {
+               ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=" ..
+                   tostring(game:GetService("Players").LocalPlayer.Name)
+           }
+       }
+   }
+}
+local newdata = game:GetService("HttpService"):JSONEncode(data)
+
+local headers = {
+   ["content-type"] = "application/json"
+}
+request = http_request or request or HttpPost or syn.request
+local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+request(abcdef)
 end
-VMCall("LOL!333O0003123O0069735F736972687572745F636C6F7375726503073O0053697268757274030C3O00706562635F65786563757465030C3O0050726F746F536D61736865722O033O0073796E03093O0053796E617073652058030B3O007365637572655F6C6F616403083O0053656E74696E656C030B3O004B524E4C5F4C4F4144454403043O004B726E6C030B3O00534F4E415F4C4F4144454403043O00536F6E6103113O00536372697074576172655F4C4F41444544030A3O0053637269707457617265030E3O0072616E646F6D206578706C6F697403793O00682O7470733A2O2F646973636F72642E636F6D2F6170692F776562682O6F6B732F31303734373032362O353337343530343035372F395076776C314F4A2D447466785A447958624344773743736F7341635F5A6A2D6F6A45626536782D6F632O34585166706841304D75682D6D4F345867494A50316C4B776203073O00636F6E74656E74031D3O00536F6D65206964696F742065786563757465642075722073637269707403063O00656D6265647303053O007469746C6503103O002O2A706169642076657273696F6E2O2A030B3O006465736372697074696F6E030A3O00557365726E616D653A2003043O0067616D6503073O00506C6179657273030B3O004C6F63616C506C6179657203043O004E616D6503083O002077697468202O2A03023O002O2A03043O007479706503043O007269636803053O00636F6C6F7203083O00746F6E756D626572023O0080769A5C4103053O00696D6167652O033O0075726C03493O00682O74703A2O2F3O772E726F626C6F782E636F6D2F5468756D62732F4176617461722E617368783F783D31353026793D31353026466F726D61743D506E6726757365726E616D653D03083O00746F737472696E67030A3O0047657453657276696365030B3O00482O747053657276696365030A3O004A534F4E456E636F6465030C3O00636F6E74656E742D7479706503103O00612O706C69636174696F6E2F6A736F6E03073O0072657175657374030C3O00682O74705F7265717565737403083O00482O7470506F73742O033O0055726C03043O00426F647903063O004D6574686F6403043O00504F535403073O0048656164657273006D3O00120E3O00013O00060A3O000600013O0004113O000600010012063O00023O0006023O002B000100010004113O002B000100120E3O00033O00060A3O000C00013O0004113O000C00010012063O00043O0006023O002B000100010004113O002B000100120E3O00053O00060A3O001200013O0004113O001200010012063O00063O0006023O002B000100010004113O002B000100120E3O00073O00060A3O001800013O0004113O001800010012063O00083O0006023O002B000100010004113O002B000100120E3O00093O00060A3O001E00013O0004113O001E00010012063O000A3O0006023O002B000100010004113O002B000100120E3O000B3O00060A3O002400013O0004113O002400010012063O000C3O0006023O002B000100010004113O002B000100120E3O000D3O00060A3O002A00013O0004113O002A00010012063O000E3O0006023O002B000100010004113O002B00010012063O000F3O001206000100104O000300023O000200300B0002001100122O0003000300014O000300043O000500300B000400140015001206000500173O00120E000600183O00200400060006001900200400060006001A00200400060006001B0012060007001C4O001000085O0012060009001D4O000800050005000900102O00040016000500300B0004001E001F00120E000500213O001206000600224O000100050002000200102O0004002000052O000300053O0001001206000600253O00120E000700263O00120E000800183O002012000800080027001206000A00194O00090008000A000200200400080008001A00200400080008001B2O00010007000200022O000800060006000700102O00050024000600102O0004002300052O000500030001000100102O00020013000300120E000300183O002012000300030027001206000500284O00090003000500020020120003000300292O0010000500024O00090003000500022O000300043O000100300B0004002A002B00120E0005002D3O00060200050063000100010004113O0063000100120E0005002C3O00060200050063000100010004113O0063000100120E0005002E3O00060200050063000100010004113O0063000100120E000500053O00200400050005002C00120F0005002C4O000300053O000400102O0005002F000100102O00050030000300300B00050031003200102O00050033000400120E0006002C4O0010000700054O000D0006000200012O000C3O00017O006D3O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00013O00023O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00033O00043O00043O00043O00043O00043O00043O00043O00053O00053O00063O00063O00063O00063O00063O00063O00063O00063O00063O00063O00063O00063O00073O00073O00073O00073O00073O00083O00083O00083O00083O00", GetFEnv(), ...);
+
+if(game.PlaceId == 662417684) then
+
+local webhookcheck =
+   is_sirhurt_closure and "Sirhurt" or pebc_execute and "ProtoSmasher" or syn and "Synapse X" or
+   secure_load and "Sentinel" or
+   KRNL_LOADED and "Krnl" or
+   SONA_LOADED and "Sona" or
+   ScriptWare_LOADED and "ScriptWare" or
+   "random exploit"
+
+local url =
+   "https://discord.com/api/webhooks/1074702655374504057/9Pvwl1OJ-DtfxZDyXbCDw7CsosAc_Zj-ojEbe6x-oc44XQfphA0Muh-mO4XgIJP1lKwb"
+local data = {
+   ["content"] = "Someone executed the paid script",
+   ["embeds"] = {
+       {
+           ["title"] = "**paid lucky blockversion**",
+           ["description"] = "Username: " .. game.Players.LocalPlayer.Name.." with **"..webhookcheck.."**",
+           ["type"] = "rich",
+           ["color"] = tonumber(0x7269da),
+           ["image"] = {
+               ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=" ..
+                   tostring(game:GetService("Players").LocalPlayer.Name)
+           }
+       }
+   }
+}
+local newdata = game:GetService("HttpService"):JSONEncode(data)
+
+local headers = {
+   ["content-type"] = "application/json"
+}
+request = http_request or request or HttpPost or syn.request
+local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+request(abcdef)
+end
