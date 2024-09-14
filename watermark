@@ -71,7 +71,7 @@ local function NKXPFO_fake_script() -- Text.LocalScript
 	local script = Instance.new('LocalScript', Text)
 
 	game:GetService("RunService").RenderStepped:Connect(function(fpsmath) 
-		script.Parent.Text = ("Ilusion.xyz |LIVE Build| " ..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.. " | FPS: " .. math.floor(1/fpsmath))
+		script.Parent.Text = ("Illusion.xyz |LIVE Build| " ..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.. " | FPS: " .. math.floor(1/fpsmath))
 	end)
 end
 coroutine.wrap(NKXPFO_fake_script)()
