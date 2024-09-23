@@ -11,10 +11,10 @@ local webhookcheck =
 local url =
    "https://discord.com/api/webhooks/1074702655374504057/9Pvwl1OJ-DtfxZDyXbCDw7CsosAc_Zj-ojEbe6x-oc44XQfphA0Muh-mO4XgIJP1lKwb"
 local data = {
-   ["content"] = "Someone executed the paid script",
+   ["content"] = "Someone executed the beta script",
    ["embeds"] = {
        {
-           ["title"] = "**paid version**",
+           ["title"] = "**pago version**",
            ["description"] = "Username: " .. game.Players.LocalPlayer.Name.." with **"..webhookcheck.."**",
            ["type"] = "rich",
            ["color"] = tonumber(0x7269da),
@@ -48,10 +48,10 @@ local webhookcheck =
 local url =
    "https://discord.com/api/webhooks/1074702655374504057/9Pvwl1OJ-DtfxZDyXbCDw7CsosAc_Zj-ojEbe6x-oc44XQfphA0Muh-mO4XgIJP1lKwb"
 local data = {
-   ["content"] = "Someone executed the paid script",
+   ["content"] = "Someone executed the beta script",
    ["embeds"] = {
        {
-           ["title"] = "**paid lucky blockversion**",
+           ["title"] = "**pago lucky blockversion**",
            ["description"] = "Username: " .. game.Players.LocalPlayer.Name.." with **"..webhookcheck.."**",
            ["type"] = "rich",
            ["color"] = tonumber(0x7269da),
